@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Word Puzzle Game</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="puzzle-page">
+    <div class="top-bar">
+        <h2>Welcome, {{ user }}</h2>
+        <a href="{{ url_for('logout') }}">Logout</a>
+    </div>
+
+    <h1>🧩 Word Puzzle</h1>
+    <p>Find these words:</p>
+    <ul id="word-list">
+        {% for w in words %}
+        <li>{{ w }}</li>
+        {% endfor %}
+    </ul>
+
+    <div id="grid">
+        {% for row in grid %}
+        <div class="row">
+            {% for letter in row %}
+            <span class="cell">{{ letter }}</span>
+            {% endfor %}
+        </div>
+        {% endfor %}
+    </div>
+
+    <input id="wordInput" placeholder="Type found word..." />
+    <button onclick="checkWord()">Check</button>
+    <p id="result"></p>
+
+    <script>
+        function checkWord() {
+            const word = document.getElementById('wordInput').value.trim().toUpperCase();
+            fetch('/check_word', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({word})
+            })
+            .then(res => res.json())
+            .then(data => {
+                const result = document.getElementById('result');
+                if(data.found) result.textContent = "✅ Correct!";
+                else result.textContent = "❌ Not in list.";
+            });
+        }
+    </script>
+</body>
+</html>

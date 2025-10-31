@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wordpuzzle-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: wordpuzzle
+  template:
+    metadata:
+      labels:
+        app: wordpuzzle
+    spec:
+      containers:
+      - name: wordpuzzle
+        image: sparshitha/wordpuzzle:latest
+        ports:
+        - containerPort: 5000
